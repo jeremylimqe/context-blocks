@@ -1,10 +1,11 @@
 # Context Blocks Specification
 
+**Version:** v0.1.0
 **Status:** Experimental
 
 This specification defines the core data model, representability requirements, exact UTF-8 byte framing, and serialization conformance contract of an individual block.
 
-The words **MUST** and **MUST NOT** express mandatory requirements of this draft.
+The words **MUST** and **MUST NOT** express mandatory requirements of this specification.
 
 ## 1. Purpose
 
