@@ -1,0 +1,139 @@
+[
+  {
+    "id": "a",
+    "text": "",
+    "expected": "@@ctx a\n\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "hello",
+    "expected": "@@ctx a\nhello\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "hello\n",
+    "expected": "@@ctx a\nhello\n\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "hello\n\n",
+    "expected": "@@ctx a\nhello\n\n\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "\n",
+    "expected": "@@ctx a\n\n\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "hello\r\n",
+    "expected": "@@ctx a\nhello\r\n\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "hello\r",
+    "expected": "@@ctx a\nhello\r\n@@ctx.end a\n"
+  },
+  {
+    "id": "a",
+    "text": "\t hello \t",
+    "expected": "@@ctx a\n\t hello \t\n@@ctx.end a\n",
+    "description": "Text whitespace is preserved (section 3)."
+  },
+  {
+    "id": "a b",
+    "text": "hello",
+    "expected": "@@ctx a b\nhello\n@@ctx.end a b\n",
+    "description": "An internal space is part of the identifier (sections 2, 4.1)."
+  },
+  {
+    "id": "\u00e9",
+    "text": "\u00e9",
+    "expected": "@@ctx \u00e9\n\u00e9\n@@ctx.end \u00e9\n",
+    "description": "Composed Unicode is preserved in both values (section 3)."
+  },
+  {
+    "id": "e\u0301",
+    "text": "e\u0301",
+    "expected": "@@ctx e\u0301\ne\u0301\n@@ctx.end e\u0301\n",
+    "description": "Decomposed Unicode is preserved in both values (section 3)."
+  },
+  {
+    "id": "a",
+    "text": "\u0000\u0085\u2028\u2029",
+    "expected": "@@ctx a\n\u0000\u0085\u2028\u2029\n@@ctx.end a\n",
+    "description": "Identifier character restrictions do not apply to text (section 2)."
+  },
+  {
+    "id": "a",
+    "text": "@@ctx b\n@@ctx.end b",
+    "expected": "@@ctx a\n@@ctx b\n@@ctx.end b\n@@ctx.end a\n",
+    "description": "Marker-like lines remain literal text (sections 4.3, 5)."
+  },
+  {
+    "id": "a",
+    "text": "@@ctx.end a\r",
+    "expected": "@@ctx a\n@@ctx.end a\r\n@@ctx.end a\n",
+    "description": "A trailing CR prevents an exact delimiter collision (sections 4.1, 5)."
+  },
+  {
+    "id": "a",
+    "text": "\ufeffhello",
+    "expected": "@@ctx a\n\ufeffhello\n@@ctx.end a\n",
+    "description": "A supplied U+FEFF in text is preserved (sections 3, 4.2)."
+  },
+  {
+    "id": "",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject an empty identifier (section 2)."
+  },
+  {
+    "id": " a",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject leading identifier whitespace (section 2)."
+  },
+  {
+    "id": "a\u00a0",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject trailing identifier whitespace, including U+00A0 (section 2)."
+  },
+  {
+    "id": "a\nb",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject a C0 control character in the identifier (section 2)."
+  },
+  {
+    "id": "a\u0085b",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject a C1 control character in the identifier (section 2)."
+  },
+  {
+    "id": "a\u2028b",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject U+2028 in the identifier (section 2)."
+  },
+  {
+    "id": "a\u2029b",
+    "text": "hello",
+    "expected": null,
+    "description": "Reject U+2029 in the identifier (section 2)."
+  },
+  {
+    "id": "a",
+    "text": "@@ctx.end a",
+    "expected": null,
+    "description": "Reject a delimiter collision on an unterminated final text line (section 5)."
+  },
+  {
+    "id": "a",
+    "text": "before\n@@ctx.end a\nafter",
+    "expected": null,
+    "description": "Reject a delimiter collision within the text (section 5)."
+  }
+]

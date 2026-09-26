@@ -1,14 +1,14 @@
 # Context Blocks Specification
 
-**Status:** Draft
+**Status:** Experimental
 
-This draft defines the core data model and exact UTF-8 byte framing of an individual block. It is not yet a complete conformance specification.
+This specification defines the core data model, representability requirements, exact UTF-8 byte framing, and serialization conformance contract of an individual block.
 
 The words **MUST** and **MUST NOT** express mandatory requirements of this draft.
 
 ## 1. Purpose
 
-Context Blocks defines a minimal representation for independently addressable textual content. A context block is the smallest addressable unit defined by this specification.
+Context Blocks defines a minimal representation for independently identifiable textual content. A context block is the unit of representation defined by this specification.
 
 This specification defines an individual block, not a document or artifact container. How blocks are selected, ordered, or composed is outside its scope.
 
@@ -142,3 +142,38 @@ For a block to be representable, all of the following requirements MUST be satis
 Context Blocks defines no escaping mechanism.
 
 A producer or serializer MUST reject an unrepresentable block. It MUST NOT modify either supplied value to avoid a delimiter collision or otherwise make the block representable.
+
+## 6. Serialization conformance
+
+The accompanying [conformance.json](conformance.json) supplies concrete serialization cases for this version of the specification. Each case supplies the values for one block and its expected byte output or rejection.
+
+The file is a JSON array of independent cases. This array organizes test cases only; it does not define a Context Blocks collection or composition format.
+
+### 6.1. Case format
+
+Each case contains the following fields:
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | String | The supplied block identifier. |
+| `text` | String | The supplied block text. |
+| `expected` | String or `null` | The exact expected serialized output, or rejection. |
+| `description` | Optional string | An informative explanation of the case. |
+
+The fixture file is UTF-8 JSON. JSON escaping is used only to represent test values in the fixture and is interpreted once when the JSON is parsed; it is not part of Context Blocks serialization.
+
+After parsing, the UTF-8 encodings of `id` and `text` are the values supplied to Context Blocks. For example, `"\n"` supplies one LF byte, while `"\\n"` supplies a backslash followed by `n`.
+
+### 6.2. Expected results
+
+When `expected` is a string, its UTF-8 encoding is the complete expected byte output for the supplied block. Serialization MUST produce exactly those bytes. No byte order mark, newline, or other bytes are implicitly added to the expected output.
+
+Actual and expected output MUST be compared byte-for-byte, without trimming, normalization, or other transformations before comparison.
+
+When `expected` is `null`, serialization MUST reject the supplied block as required by §5. Here, `null` denotes the expected rejection outcome, not an API return value, empty output, or serialized bytes. This contract does not prescribe an exception type or diagnostic message. 
+
+### 6.3. Authority and coverage
+
+The conformance cases are authoritative for the outcomes they define. Any disagreement between a case and the specification is a defect to resolve.
+
+This JSON-string corpus does not supply malformed UTF-8 byte sequences. Their rejection remains required by §3.
